@@ -105,7 +105,7 @@
   </asset>
 
   <worldbody>
-    
+
     <geom condim="3" material="groundplane" name="floor" pos="0 0 0" size="3 3 .125" type="plane" />
     <light diffuse=".8 .8 .8" dir="0 -.15 -1" directional="false" pos="1 1 8.0" specular="0.3 0.3 0.3" castshadow="false" />
     <light diffuse=".8 .8 .8" dir="0 -.15 -1" directional="false" pos="-3. -3. 8.0" specular="0.3 0.3 0.3" castshadow="false" />
