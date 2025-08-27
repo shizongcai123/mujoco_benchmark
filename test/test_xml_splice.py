@@ -1,3 +1,6 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from robopal_part.base import *
 from mujoco import viewer
 import logging
@@ -9,7 +12,7 @@ if __name__ == "__main__":
         scene='default',
         manipulator='Panda',
         gripper='PandaHand',
-        mount=None,
+        mount='top_point',
         attached_body='0_attachment',
     )
     print("+===================")
