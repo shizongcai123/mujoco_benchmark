@@ -94,6 +94,21 @@ class RobotGenerator(object):
                                             goal_body=(mani_id, f'{mani_id}_mount_base_link') if mount is not None else (mani_id, 'worldbody'))
             
 
+    def replace_scene(self, new_scene_path: str):
+        """替换掉当前的 worldbody，用新的场景"""
+        # 解析新场景
+        new_tree = ET.parse(new_scene_path)
+        new_root = new_tree.getroot()
+
+        # 清空原来的 worldbody
+        old_worldbody = self.root.find('worldbody')
+        if old_worldbody is not None:
+            self.root.remove(old_worldbody)
+
+        # 把新场景的 worldbody 加进来
+        new_worldbody = new_root.find('worldbody')
+        if new_worldbody is not None:
+            self.root.append(new_worldbody)
 
     def _init_scene(self, scene):
         """
@@ -122,6 +137,13 @@ class RobotGenerator(object):
             raise ValueError("Please checkout your xml path.")
         tree = ET.parse(xml)
         root_node = tree.getroot()
+
+        # --- delete the worldbody if robot.xml already have a worldbody / camera / light / floor ---
+        if root_node.find('worldbody') is not None:
+            for bad_node in root_node.find('worldbody').findall("*"):
+                if bad_node.tag in ["geom", "light", "camera"]:
+                    root_node.find('worldbody').remove(bad_node)
+
         # preprocess
         if is_rename_tag:
             self._rename_tag(goal_body[0], root_node)
@@ -184,7 +206,7 @@ class RobotGenerator(object):
             if child.tag == 'mesh' and child.attrib['file'] is not None:
                 child.attrib['file'] = path.join(path.dirname(xml_path), child.attrib['file'])
             elif child.tag == 'texture' and 'file' in child.attrib:
-                TEXTURE_DIR_PATH = path.dirname(__file__) + '/./assets/textures'
+                TEXTURE_DIR_PATH = path.dirname(__file__) + '/./textures'
                 child.attrib['file'] = path.join(TEXTURE_DIR_PATH,
                                                  child.attrib['file'])
 
